@@ -6,8 +6,6 @@ from PyQt5.QtWidgets import QMessageBox
 import mysql.connector
 from mysql.connector import Error
 
-from database import create_connection, close_connection
-
 
 class Ui_RegistrationWindow(object):
     def setupUi(self, RegistrationWindow):
