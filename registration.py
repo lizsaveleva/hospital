@@ -1,5 +1,6 @@
 import sys
 import datetime
+import hashlib
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 import mysql.connector
@@ -272,15 +273,13 @@ class Ui_RegistrationWindow(object):
 
             patient_id = cursor.lastrowid
 
-            try:
-                password_int = int(password)
-            except ValueError:
-                password_int = hash(password) % (2 ** 31 - 1)
+            from hashlib import sha256
+            hashed_password = sha256(password.encode()).hexdigest()
 
-            # Insert user data
+            print("Inserting user data...")
             cursor.execute(
                 "INSERT INTO Users (username, password, patient_id) VALUES (%s, %s, %s)",
-                (username, password_int, patient_id)
+                (username, hashed_password, patient_id)
             )
 
             connection.commit()
