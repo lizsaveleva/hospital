@@ -22,3 +22,30 @@ def close_connection(connection):
         connection.close()
         print("3.Соединение с базой данных закрыто")
 
+def authenticate_user(connection, username, password):
+    cursor = None
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Users WHERE username = %s AND password = %s", (username, password))
+        return cursor.fetchone()
+    except Error as e:
+        print(f"Ошибка при аутентификации пользователя: {e}")
+        return None
+    finally:
+        if cursor:
+            cursor.close()
+
+def register_user(connection, username, password):
+    cursor = None
+    try:
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO Users (username, password) VALUES (%s, %s)", (username, password))
+        connection.commit()
+        print("Пользователь успешно зарегистрирован")
+        return True
+    except Error as e:
+        print(f"Ошибка при регистрации пользователя: {e}")
+        return False
+    finally:
+        if cursor:
+            cursor.close()
